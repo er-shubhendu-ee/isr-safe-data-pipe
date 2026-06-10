@@ -90,6 +90,12 @@ if(SERVICE_PIPE_BUILD_TESTS)
         ${TEST_SOURCES}
     )
 
+    # Remaps run_test to main during compilation
+    target_compile_definitions(service_pipe_test
+        PRIVATE
+            run_test=main
+    )
+
     target_link_libraries(service_pipe_test
         PRIVATE
             service_pipe
