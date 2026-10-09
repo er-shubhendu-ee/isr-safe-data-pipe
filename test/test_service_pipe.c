@@ -8,21 +8,6 @@
 #define TEST_PASS 0
 #define TEST_FAIL (-1)
 
-int run_test(void) {
-    test_init();
-    test_handle_allocation();
-    test_handle_exhaustion();
-    test_single_write_read();
-    test_multiple_write_read();
-    test_null_handle();
-    test_null_message();
-    test_invalid_operation();
-    test_dual_pipe_isolation();
-    test_read_before_first_write();
-
-    return 0;
-}
-
 static void print_result(const char* pName, int status) {
     printf("[%s] %s\n", (TEST_PASS == status) ? "PASS" : "FAIL", pName);
 }

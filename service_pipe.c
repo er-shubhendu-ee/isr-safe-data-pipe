@@ -12,8 +12,9 @@
 #if defined(SERVICE_PIPE_STANDALONE)
 #include "suppliment.h"
 #else
-#include "common_base.h"
-#include "config_board.h"
+#include "service_base.h"
+// #include "config_board.h"
+#include "service_system.h"
 #endif
 
 //
@@ -34,7 +35,7 @@
  *   - Must match the 'handleMagic' field in control block
  *   - Chosen to be human-readable in hex dumps ("PIPE")
  */
-#define service_pipe_HANDLE_MAGIC common_base_MAKE_MAGIC('P', 'I', 'P', 'E')
+#define service_pipe_HANDLE_MAGIC service_base_MAKE_MAGIC('P', 'I', 'P', 'E')
 
 typedef enum service_pipe_tagState {
     service_pipe_STATE_IDLE = 0,
@@ -50,7 +51,7 @@ typedef struct service_pipe_tagChannel {
 
 /* Control block for each PIPE instance.
  *
- * Requirements (for common_base_ASSERT_HANDLE):
+ * Requirements (for service_base_ASSERT_HANDLE):
  *   - Must contain: uint32_t handleMagic;
  *   - Field name must be exactly 'handleMagic'
  *
@@ -87,7 +88,7 @@ typedef struct service_pipe_tagServiceControlBlock {
  *   - Memory is contiguous
  *   - Properly aligned for service_pipe_ControlBlock_t
  *
- * Used by common_base_is_valid_handle() for range + alignment validation
+ * Used by service_base_is_valid_handle() for range + alignment validation
  */
 static service_pipe_ControlBlock_t gPoolPipeControlBlock[service_pipe_INSTANCE_COUNT_MAX];
 static service_pipe_ServiceControlBlock_t gServiceControlBlock;
@@ -116,6 +117,10 @@ int32_t service_pipe_init(void) {
 }
 
 service_pipe_Handle_t service_pipe_get_handle(service_pipe_Id_t id) {
+    if (!gServiceControlBlock.pPoolPipeControlBlock) {
+        return NULL;
+    }
+
     service_pipe_ControlBlock_t* hTemp = NULL;
     if (service_pipe_INSTANCE_COUNT_MAX <= gServiceControlBlock.instanceUsed) {
         return NULL;
@@ -144,10 +149,10 @@ int32_t service_pipe_access(service_pipe_Handle_t hPipe, service_pipe_OpType_t o
     }
 
     if (service_pipe_STATUS_NO_ERROR !=
-        common_base_ASSERT_HANDLE(hPipe, gPoolPipeControlBlock, service_pipe_INSTANCE_COUNT_MAX,
-                                  service_pipe_ControlBlock_t, service_pipe_HANDLE_MAGIC,
-                                  service_pipe_STATUS_NO_ERROR,
-                                  service_pipe_ERROR_INVALID_HANDLE)) {
+        service_base_ASSERT_HANDLE(hPipe, gPoolPipeControlBlock, service_pipe_INSTANCE_COUNT_MAX,
+                                   service_pipe_ControlBlock_t, service_pipe_HANDLE_MAGIC,
+                                   service_pipe_STATUS_NO_ERROR,
+                                   service_pipe_ERROR_INVALID_HANDLE)) {
         return service_pipe_ERROR_INVALID_HANDLE;
     }
 
