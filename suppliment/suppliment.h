@@ -21,20 +21,20 @@
 #endif
 
 /* --------------------------------------------------------------------------
- * common_base compatibility
+ * service_base compatibility
  * -------------------------------------------------------------------------- */
-#if defined(COMMON_BASE_H_)
+#if defined(SERVICE_BASE_H_)
 
-#include "common_base.h"
+#include "service_base.h"
 
 #else
 
-#ifndef common_base_MAKE_MAGIC
-#define common_base_MAKE_MAGIC(a, b, c, d) \
+#ifndef service_base_MAKE_MAGIC
+#define service_base_MAKE_MAGIC(a, b, c, d) \
     (((uint32_t)(a) << 24U) | ((uint32_t)(b) << 16U) | ((uint32_t)(c) << 8U) | ((uint32_t)(d)))
 #endif
 
-static inline int common_base_is_valid_handle(void* handle, void* poolStart, size_t elementCount,
+static inline int service_base_is_valid_handle(void* handle, void* poolStart, size_t elementCount,
                                               size_t elementSize) {
     uintptr_t h;
     uintptr_t start;
@@ -59,15 +59,15 @@ static inline int common_base_is_valid_handle(void* handle, void* poolStart, siz
     return 1;
 }
 
-#define common_base_ASSERT_HANDLE(handle, poolStart, elementCount, type, magicValue, okVal,       \
+#define service_base_ASSERT_HANDLE(handle, poolStart, elementCount, type, magicValue, okVal,       \
                                   errVal)                                                         \
-    ((common_base_is_valid_handle((void*)(handle), (void*)(poolStart), (elementCount),            \
+    ((service_base_is_valid_handle((void*)(handle), (void*)(poolStart), (elementCount),            \
                                   sizeof(type)) &&                                                \
       (*(uint32_t*)((uint8_t*)(handle) + offsetof(type, handleMagic)) == (uint32_t)(magicValue))) \
          ? (okVal)                                                                                \
          : (errVal))
 
-#endif /* COMMON_BASE_H_ */
+#endif /* SERVICE_BASE_H_ */
 
 /* --------------------------------------------------------------------------
  * service_system compatibility

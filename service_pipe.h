@@ -32,10 +32,13 @@
 #ifndef SERVICE_PIPE_H_
 #define SERVICE_PIPE_H_
 
+
 #include <stdbool.h>
 #include <stdint.h>
 
-#define service_pipe_INSTANCE_COUNT_MAX 2
+#define service_pipe_DATA_PACKET_SIZE_MAX 256
+
+#define service_pipe_INSTANCE_COUNT_MAX 4
 #define service_pipe_CHANNEL_COUNT_MAX 2
 
 typedef enum service_pipe_tagStatus {
@@ -86,9 +89,8 @@ typedef uint32_t service_pipe_Id_t;
  * Extend this structure as required.
  */
 typedef struct service_pipe_tagMessage {
-    service_pipe_SupervisorMessage_t supervisorParam;
-    service_pipe_ProtectionMessage_t protectionParam;
-    service_pipe_ControlMessage_t controlParam;
+    uint8_t dataPacket[service_pipe_DATA_PACKET_SIZE_MAX];
+    uint32_t dataLen;
 } service_pipe_Message_t;
 
 /* Pipe width in bytes. */
